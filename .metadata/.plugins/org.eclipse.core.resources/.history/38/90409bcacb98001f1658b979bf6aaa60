@@ -1,0 +1,18 @@
+package com.springboot.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.springboot.entity.ReporteEntity;
+
+public interface ReporteRepository extends JpaRepository<ReporteEntity, Long> {
+
+    List<ReporteEntity> findByAnio(Integer anio);
+
+    List<ReporteEntity> findByMesAndAnio(Integer mes, Integer anio);
+
+    List<ReporteEntity> findByPeriodoAndAnio(String periodo, Integer anio);
+
+    // Puedes crear métodos adicionales según necesites filtros más específicos
+}

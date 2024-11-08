@@ -1,0 +1,13 @@
+package com.springboot.repository;
+
+import java.sql.Date;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.springboot.entity.PedidoEntity;
+
+public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> 
+{
+    Optional<PedidoEntity> findByFechaPedido(Date fechaPedido);
+}

@@ -1,0 +1,211 @@
+package com.springboot.dto;
+
+import java.sql.Date;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+
+public class InventarioDto 
+{
+	@NotNull(message = "cantidadDisponible es requerido")
+	private Integer cantidadDisponible;
+	@NotNull(message = "precioPersonalizado es requerido")
+	private Float precioPersonalizado;
+	@NotNull(message = "fechaVencimiento es requerido")
+	private Date fechaVencimiento;
+	@NotEmpty(message = "estadoProducto es requerido")
+	private String estadoProducto;
+	
+
+	
+	// Detalles del producto
+	@NotNull(message = "idProducto es requerido")
+	private Integer idProducto;
+	@NotEmpty(message = "nombreProducto es requerido")
+	private String nombreProducto;
+	@NotNull(message = "precioBase es requerido")
+    private Float precioBase;
+	@NotEmpty(message = "descripcion es requerido")
+    private String descripcion;
+	@NotNull(message = "impuestoSelectivoConsumo es requerido")
+    private Boolean impuestoSelectivoConsumo;
+	@NotNull(message = "igv es requerido")
+    private Boolean igv;
+	@NotEmpty(message = "imagenProducto es requerido")
+    private String imagenProducto;
+	
+	@NotNull(message = "idUsuario es requerido")
+    private Long idUsuario;
+    
+    // Detalles de la subcategoría
+	@NotNull(message = "idSubCategoria es requerido")
+    private Integer idSubCategoria;
+	@NotEmpty(message = "nombreSubcategoria es requerido")
+    private String nombreSubcategoria;
+    
+    // Detalles de la categoría
+	@NotNull(message = "idCategoria es requerido")
+    private Integer idCategoria;
+	@NotEmpty(message = "nombrecategoria es requerido")
+    private String nombreCategoria;
+    
+
+	// Constructor
+    public InventarioDto(Integer cantidadDisponible, Float precioPersonalizado, Date fechaVencimiento,
+                         String estadoProducto, Integer idProducto, String nombreProducto,
+                         Float precioBase, String descripcion, Boolean impuestoSelectivoConsumo,
+                         Boolean igv, String imagenProducto, Long idUsuario,
+                         Integer idSubCategoria, String nombreSubcategoria,
+                         Integer idCategoria, String nombreCategoria) {
+        this.cantidadDisponible = cantidadDisponible;
+        this.precioPersonalizado = precioPersonalizado;
+        this.fechaVencimiento = fechaVencimiento;
+        this.estadoProducto = estadoProducto;
+        this.idProducto = idProducto;
+        this.nombreProducto = nombreProducto;
+        this.precioBase = precioBase;
+        this.descripcion = descripcion;
+        this.impuestoSelectivoConsumo = impuestoSelectivoConsumo;
+        this.igv = igv;
+        this.imagenProducto = imagenProducto;
+        this.idUsuario = idUsuario;
+        this.idSubCategoria = idSubCategoria;
+        this.nombreSubcategoria = nombreSubcategoria;
+        this.idCategoria = idCategoria;
+        this.nombreCategoria = nombreCategoria;
+    }
+
+    public InventarioDto() {
+        // Constructor vacío
+    }
+
+    // Getters y Setters
+    public Integer getCantidadDisponible() {
+        return cantidadDisponible;
+    }
+
+    public void setCantidadDisponible(Integer cantidadDisponible) {
+        this.cantidadDisponible = cantidadDisponible;
+    }
+
+    public Float getPrecioPersonalizado() {
+        return precioPersonalizado;
+    }
+
+    public void setPrecioPersonalizado(Float precioPersonalizado) {
+        this.precioPersonalizado = precioPersonalizado;
+    }
+
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public String getEstadoProducto() {
+        return estadoProducto;
+    }
+
+    public void setEstadoProducto(String estadoProducto) {
+        this.estadoProducto = estadoProducto;
+    }
+
+    public Integer getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(Integer idProducto) {
+        this.idProducto = idProducto;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
+    public Float getPrecioBase() {
+        return precioBase;
+    }
+
+    public void setPrecioBase(Float precioBase) {
+        this.precioBase = precioBase;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Boolean getImpuestoSelectivoConsumo() {
+        return impuestoSelectivoConsumo;
+    }
+
+    public void setImpuestoSelectivoConsumo(Boolean impuestoSelectivoConsumo) {
+        this.impuestoSelectivoConsumo = impuestoSelectivoConsumo;
+    }
+
+    public Boolean getIgv() {
+        return igv;
+    }
+
+    public void setIgv(Boolean igv) {
+        this.igv = igv;
+    }
+
+    public String getImagenProducto() {
+        return imagenProducto;
+    }
+
+    public void setImagenProducto(String imagenProducto) {
+        this.imagenProducto = imagenProducto;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public Integer getIdSubCategoria() {
+        return idSubCategoria;
+    }
+
+    public void setIdSubCategoria(Integer idSubCategoria) {
+        this.idSubCategoria = idSubCategoria;
+    }
+
+    public String getNombreSubcategoria() {
+        return nombreSubcategoria;
+    }
+
+    public void setNombreSubcategoria(String nombreSubcategoria) {
+        this.nombreSubcategoria = nombreSubcategoria;
+    }
+
+    public Integer getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(Integer idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
+    }
+}

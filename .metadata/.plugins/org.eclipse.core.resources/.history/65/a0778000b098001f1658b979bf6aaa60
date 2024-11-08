@@ -1,0 +1,55 @@
+package com.springboot.service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.springboot.dto.VentaDto;
+import com.springboot.entity.DetalleVentaEntity;
+import com.springboot.entity.VentaEntity;
+import com.springboot.repository.VentaRepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+@Transactional
+public class VentaService 
+{
+	@Autowired
+    private VentaRepository ventaRepository;
+
+	
+	public List<VentaDto> listarVentas() {
+        return ventaRepository.findAll().stream()
+                .map(this::convertirADto)
+                .collect(Collectors.toList());
+    }
+
+    private VentaDto convertirADto(VentaEntity venta) {
+        VentaDto dto = new VentaDto();
+        dto.setIdVenta(venta.getIdVenta());
+        dto.setFechaVenta(venta.getFechaVenta());
+        dto.setTotalVenta(venta.getTotalVenta());
+        // Puedes agregar detalles si lo deseas
+        return dto;
+    }
+	
+	
+	
+	
+	
+    @Transactional
+    public VentaEntity registrarVenta(VentaEntity ventaEntity) {
+        // Calcular el total de la venta
+        double total = 0.0;
+        for (DetalleVentaEntity detalle : ventaEntity.getDetallesVentaEntity()) {
+            total += detalle.getPrecioVenta() * detalle.getCantidad();
+            detalle.setVentaEntity(ventaEntity); // Establecer la relación bidireccional
+        }
+        ventaEntity.setTotalVenta(total); // Asignar el total calculado
+        return ventaRepository.save(ventaEntity);
+    }
+}

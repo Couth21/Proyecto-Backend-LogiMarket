@@ -1,0 +1,195 @@
+package com.springboot.service;
+
+import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.springboot.entity.CategoriaEntity;
+import com.springboot.entity.InventarioEntity;
+import com.springboot.entity.ProductoEntity;
+import com.springboot.entity.SubcategoriaEntity;
+import com.springboot.repository.CategoriaRepository;
+import com.springboot.repository.InventarioRepository;
+import com.springboot.repository.ProductoRepository;
+import com.springboot.repository.SubcategoriaRepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+@Transactional
+public class InventarioService 
+{
+	@Autowired
+	InventarioRepository inventarioRepository;
+	
+	@Autowired
+    CategoriaRepository categoriaRepository;
+
+    @Autowired
+    SubcategoriaRepository subcategoriaRepository;
+
+    @Autowired
+    ProductoRepository productoRepository;
+	
+   
+	@Autowired
+    private RestTemplate restTemplate;
+	
+	
+    public List<InventarioEntity> obtenerInventarioPorUsuario(long idUsuario) throws AccessDeniedException {
+        // URL del servicio usuario-roles-service para verificar si el usuario es "bodeguero"
+        String url = "http://localhost:9091/usuario/esBodeguero/" + idUsuario;
+        
+        // Llama al endpoint para verificar el rol del usuario
+        ResponseEntity<Boolean> response = restTemplate.getForEntity(url, Boolean.class);
+        Boolean esBodeguero = response.getBody();
+        
+        if (!Boolean.TRUE.equals(esBodeguero)) {
+            throw new AccessDeniedException("Acceso denegado. Solo los bodegueros pueden ver el inventario.");
+        }
+
+        return inventarioRepository.findByIdUsuario(idUsuario);
+    }
+	
+	
+	
+	
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+ // Métodos para crear entidades
+    public void crearCategoria(CategoriaEntity categoria) {
+        categoriaRepository.save(categoria);
+    }
+
+    public void crearSubcategoria(SubcategoriaEntity subcategoria) {
+        subcategoriaRepository.save(subcategoria);
+    }
+
+    public void crearProducto(ProductoEntity producto) {
+        productoRepository.save(producto);
+    }
+
+    public void crearInventario(InventarioEntity inventario) {
+        inventarioRepository.save(inventario);
+    }
+
+    // Métodos CRUD de Inventario
+    public Optional<InventarioEntity> getOne(int id) {
+        return inventarioRepository.findById(id);
+    }
+
+    public List<InventarioEntity> list() {
+        return inventarioRepository.findAll();
+    }
+
+    public void delete(int id) {
+        inventarioRepository.deleteById(id);
+    }
+
+    public boolean existsById(int id) {
+        return inventarioRepository.existsById(id);
+    }
+
+    public boolean existsByCantidadDisponible(int cantidadDisponible) {
+        return inventarioRepository.existsByCantidadDisponible(cantidadDisponible);
+    }
+    
+    public List<CategoriaEntity> listarCategorias() {
+        return categoriaRepository.findAll();
+    }
+    
+    
+    public List<SubcategoriaEntity> listarSubcategorias() {
+        return subcategoriaRepository.findAll();
+    }
+    
+    
+    public List<ProductoEntity> listarProductos() {
+        return productoRepository.findAll();
+    }
+    
+    
+    public List<InventarioEntity> listarInventarios() {
+        return inventarioRepository.findAll();
+    }
+    
+    
+    
+    
+    
+ // Métodos de edición para cada entidad
+
+    // Método para editar categoría
+    public CategoriaEntity editarCategoria(CategoriaEntity categoria) {
+        if (!categoriaRepository.existsById(categoria.getIdCategoria())) {
+            throw new IllegalArgumentException("La categoría no existe.");
+        }
+        return categoriaRepository.save(categoria);
+    }
+
+    // Método para editar subcategoría
+    public SubcategoriaEntity editarSubcategoria(SubcategoriaEntity subcategoria) {
+        Optional<SubcategoriaEntity> subcategoriaExistente = subcategoriaRepository.findById(subcategoria.getIdSubCategoria());
+
+        if (subcategoriaExistente.isPresent()) {
+            SubcategoriaEntity subcategoriaActualizada = subcategoriaExistente.get();
+
+            // Actualizar el nombre de la subcategoría si no es nulo
+            if (subcategoria.getNombreSubcategoria() != null) {
+                subcategoriaActualizada.setNombreSubcategoria(subcategoria.getNombreSubcategoria());
+            }
+
+            // Actualizar la categoría si no es nula y si existe en la base de datos
+            if (subcategoria.getCategoriaEntity() != null) {
+                CategoriaEntity categoria = categoriaRepository.findById(subcategoria.getCategoriaEntity().getIdCategoria())
+                        .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada."));
+                subcategoriaActualizada.setCategoriaEntity(categoria);
+            }
+
+            try {
+                return subcategoriaRepository.save(subcategoriaActualizada);
+            } catch (Exception e) {
+                throw new RuntimeException("Error al actualizar la subcategoría: " + e.getMessage());
+            }
+        } else {
+            throw new IllegalArgumentException("Subcategoría no encontrada.");
+        }
+    }
+
+
+    // Método para editar producto
+    public ProductoEntity editarProducto(ProductoEntity producto) {
+        if (!productoRepository.existsById(producto.getIdProducto())) {
+            throw new IllegalArgumentException("El producto no existe.");
+        }
+        return productoRepository.save(producto);
+    }
+
+    // Método para editar inventario
+    public InventarioEntity editarInventario(InventarioEntity inventario) {
+        if (!inventarioRepository.existsById(inventario.getIdInventario())) {
+            throw new IllegalArgumentException("El inventario no existe.");
+        }
+        return inventarioRepository.save(inventario);
+    }
+
+}

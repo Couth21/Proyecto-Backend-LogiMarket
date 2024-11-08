@@ -1,0 +1,100 @@
+package com.springboot.controller;
+
+import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+
+import com.springboot.dto.InventarioDto;
+import com.springboot.entity.CategoriaEntity;
+import com.springboot.entity.InventarioEntity;
+import com.springboot.entity.ProductoEntity;
+import com.springboot.entity.SubcategoriaEntity;
+import com.springboot.service.InventarioService;
+
+import jakarta.validation.Valid;
+
+
+@RestController
+@RequestMapping("/inventario")
+@CrossOrigin("*")
+public class InventarioController 
+{
+	@Autowired
+	InventarioService inventarioService;
+	
+	
+	@GetMapping("/lista")
+	public ResponseEntity<List<InventarioEntity>> list()
+	{
+		List<InventarioEntity> list = inventarioService.list();
+		return new ResponseEntity(list,HttpStatus.OK);
+	}
+	
+
+	
+	@GetMapping("/detail/{id}")
+	public ResponseEntity<InventarioEntity> getInventarioById(@PathVariable int id)
+	{
+		Optional<InventarioEntity> inventarioEntity = inventarioService.getOne(id);
+		return inventarioEntity.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+	
+	
+	 // Endpoint para obtener los inventarios de un usuario específico
+	@GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<InventarioEntity>> obtenerInventarioPorUsuario(@PathVariable long idUsuario) {
+        try {
+            List<InventarioEntity> inventarios = inventarioService.obtenerInventarioPorUsuario(idUsuario);
+            return ResponseEntity.ok(inventarios);
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
+	 
+	
+	
+	@PostMapping("/crearCategoria")
+    public ResponseEntity<String> crearCategoria(@Valid @RequestBody CategoriaEntity categoriaEntity) {
+        inventarioService.crearCategoria(categoriaEntity);
+        return ResponseEntity.ok("Categoría creada exitosamente");
+    }
+
+    @PostMapping("/crearSubcategoria")
+    public ResponseEntity<String> crearSubcategoria(@Valid @RequestBody SubcategoriaEntity subcategoriaEntity) {
+        inventarioService.crearSubcategoria(subcategoriaEntity);
+        return ResponseEntity.ok("Subcategoría creada exitosamente");
+    }
+
+    @PostMapping("/crearProducto")
+    public ResponseEntity<String> crearProducto(@Valid @RequestBody ProductoEntity productoEntity) {
+        inventarioService.crearProducto(productoEntity);
+        return ResponseEntity.ok("Producto creado exitosamente");
+    }
+
+    @PostMapping("/crearInventario")
+    public ResponseEntity<String> crearInventario(@Valid @RequestBody InventarioEntity inventarioEntity) {
+        inventarioService.crearInventario(inventarioEntity);
+        return ResponseEntity.ok("Inventario creado exitosamente");
+    }
+	
+}

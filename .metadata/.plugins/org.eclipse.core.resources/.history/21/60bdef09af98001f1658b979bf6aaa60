@@ -1,0 +1,42 @@
+package com.springboot.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.springboot.dto.VentaDto;
+import com.springboot.entity.DetalleVentaEntity;
+import com.springboot.entity.VentaEntity;
+import com.springboot.service.VentaService;
+
+@RestController
+@RequestMapping("/venta")
+@CrossOrigin("¨*")
+public class VentaController 
+{
+	@Autowired
+	VentaService ventaService;
+	
+	@PostMapping("/registrar")
+    public VentaEntity registrarVenta(@RequestBody VentaDto ventaDto) {
+        VentaEntity venta = new VentaEntity();
+        venta.setFechaVenta(java.sql.Date.valueOf(ventaDto.getFechaVenta())); // Asumiendo que llega como String
+
+        List<DetalleVentaEntity> detalles = new ArrayList<>();
+        for (VentaDto.DetalleVentaDto detalleDTO : ventaDto.getDetallesVenta()) {
+            DetalleVentaEntity detalle = new DetalleVentaEntity();
+            detalle.setCantidad(detalleDTO.getCantidad());
+            detalle.setPrecioVenta(detalleDTO.getPrecioVenta());
+            detalles.add(detalle);
+        }
+
+        venta.setDetallesVentaEntity(detalles); // Asignar detalles a la venta
+        return ventaService.registrarVenta(venta);
+    }
+}

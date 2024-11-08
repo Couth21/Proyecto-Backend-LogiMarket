@@ -1,0 +1,80 @@
+package com.springboot.dto;
+
+import java.sql.Date;
+import java.util.List;
+
+public class VentaDto 
+{
+	private Long idVenta;
+    private Date fechaVenta;
+    private List<DetalleVentaDto> detallesVenta;
+    private Double totalVenta;
+
+    // Getters y Setters
+
+    public Long getIdVenta() {
+        return idVenta;
+    }
+
+    public void setIdVenta(Long idVenta) {
+        this.idVenta = idVenta;
+    }
+
+
+    public List<DetalleVentaDto> getDetallesVenta() {
+        return detallesVenta;
+    }
+
+    public void setDetallesVenta(List<DetalleVentaDto> detallesVenta) {
+        this.detallesVenta = detallesVenta;
+    }
+
+    public static class DetalleVentaDto {
+        private Long idDetalleVenta;
+        private Integer cantidad;
+        private Double precioVenta;
+
+        // Getters y Setters
+
+        public Long getIdDetalleVenta() {
+            return idDetalleVenta;
+        }
+
+        public void setIdDetalleVenta(Long idDetalleVenta) {
+            this.idDetalleVenta = idDetalleVenta;
+        }
+
+        public Integer getCantidad() {
+            return cantidad;
+        }
+
+        public void setCantidad(Integer cantidad) {
+            this.cantidad = cantidad;
+        }
+
+        public Double getPrecioVenta() {
+            return precioVenta;
+        }
+
+        public void setPrecioVenta(Double precioVenta) {
+            this.precioVenta = precioVenta;
+        }
+    }
+    
+    public Date getFechaVenta() {
+        return fechaVenta;
+    }
+
+    public void setFechaVenta(Date fechaVenta) {
+        this.fechaVenta = fechaVenta;
+    }
+
+    public Double getTotalVenta() {
+        return totalVenta;
+    }
+
+    public void setTotalVenta(Double totalVenta) {
+        this.totalVenta = totalVenta;
+    }
+    
+}

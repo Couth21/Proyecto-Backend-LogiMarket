@@ -1,0 +1,228 @@
+package com.springboot.dto;
+
+import java.sql.Date;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+
+public class InventarioDto 
+{
+	@NotNull(message = "cantidadDisponible es requerido")
+	private int cantidadDisponible;
+	@NotNull(message = "precioPersonalizado es requerido")
+	private float precioPersonalizado;
+	@NotNull(message = "fechaVencimiento es requerido")
+	private Date fechaVencimiento;
+	@NotEmpty(message = "estadoProducto es requerido")
+	private String estadoProducto;
+	
+
+	
+	// Detalles del producto
+	@NotNull(message = "idProducto es requerido")
+	private int idProducto;
+	@NotEmpty(message = "nombreProducto es requerido")
+	private String nombreProducto;
+	@NotNull(message = "precioBase es requerido")
+    private float precioBase;
+	@NotEmpty(message = "descripcion es requerido")
+    private String descripcion;
+	@NotNull(message = "impuestoSelectivoConsumo es requerido")
+    private boolean impuestoSelectivoConsumo;
+	@NotNull(message = "igv es requerido")
+    private boolean igv;
+	@NotEmpty(message = "imagenProducto es requerido")
+    private String imagenProducto;
+	
+	@NotNull(message = "idUsuario es requerido")
+    private Long idUsuario;
+    
+    // Detalles de la subcategoría
+	@NotNull(message = "idSubCategoria es requerido")
+    private int idSubCategoria;
+	@NotEmpty(message = "nombreSubcategoria es requerido")
+    private String nombreSubcategoria;
+    
+    // Detalles de la categoría
+	@NotNull(message = "idCategoria es requerido")
+    private int idCategoria;
+	@NotEmpty(message = "nombrecategoria es requerido")
+    private String nombreCategoria;
+    
+
+    
+    
+    //constructor
+    public InventarioDto(int cantidadDisponible, float precioPersonalizado, Date fechaVencimiento,
+            String estadoProducto, int idProducto, String nombreProducto, 
+            float precioBase, String descripcion, boolean impuestoSelectivoConsumo,
+            boolean igv, String imagenProducto, int idSubCategoria, 
+            String nombreSubcategoria, int idCategoria, String nombreCategoria) {
+    	this.cantidadDisponible = cantidadDisponible;
+    	this.precioPersonalizado = precioPersonalizado;
+    	this.fechaVencimiento = fechaVencimiento;
+    	this.estadoProducto = estadoProducto;
+    	this.idProducto = idProducto;
+    	this.nombreProducto = nombreProducto;
+    	this.precioBase = precioBase;
+    	this.descripcion = descripcion;
+    	this.impuestoSelectivoConsumo = impuestoSelectivoConsumo;
+    	this.igv = igv;
+    	this.imagenProducto = imagenProducto;
+    	this.idSubCategoria = idSubCategoria;
+    	this.nombreSubcategoria = nombreSubcategoria;
+    	this.idCategoria = idCategoria;
+    	this.nombreCategoria = nombreCategoria;
+    }
+	
+	
+	public InventarioDto() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getCantidadDisponible() {
+		return cantidadDisponible;
+	}
+
+	public void setCantidadDisponible(int cantidadDisponible) {
+		this.cantidadDisponible = cantidadDisponible;
+	}
+
+	public float getPrecioPersonalizado() {
+		return precioPersonalizado;
+	}
+
+	public void setPrecioPersonalizado(float precioPersonalizado) {
+		this.precioPersonalizado = precioPersonalizado;
+	}
+
+	public Date getFechaVencimiento() {
+		return fechaVencimiento;
+	}
+
+	public void setFechaVencimiento(Date fechaVencimiento) {
+		this.fechaVencimiento = fechaVencimiento;
+	}
+
+	public String getEstadoProducto() {
+		return estadoProducto;
+	}
+
+	public void setEstadoProducto(String estadoProducto) {
+		this.estadoProducto = estadoProducto;
+	}
+
+
+	public int getIdProducto() {
+		return idProducto;
+	}
+
+
+	public void setIdProducto(int idProductto) {
+		this.idProducto = idProductto;
+	}
+
+
+	public String getNombreProducto() {
+		return nombreProducto;
+	}
+
+
+	public void setNombreProducto(String nombreProducto) {
+		this.nombreProducto = nombreProducto;
+	}
+
+
+	public float getPrecioBase() {
+		return precioBase;
+	}
+
+
+	public void setPrecioBase(float precioBase) {
+		this.precioBase = precioBase;
+	}
+
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+
+	public boolean isImpuestoSelectivoConsumo() {
+		return impuestoSelectivoConsumo;
+	}
+
+
+	public void setImpuestoSelectivoConsumo(boolean impuestoSelectivoConsumo) {
+		this.impuestoSelectivoConsumo = impuestoSelectivoConsumo;
+	}
+
+
+	public boolean isIgv() {
+		return igv;
+	}
+
+
+	public void setIgv(boolean igv) {
+		this.igv = igv;
+	}
+
+
+	public String getImagenProducto() {
+		return imagenProducto;
+	}
+
+
+	public void setImagenProducto(String imagenProducto) {
+		this.imagenProducto = imagenProducto;
+	}
+
+
+	public int getIdSubCategoria() {
+		return idSubCategoria;
+	}
+
+
+	public void setIdSubCategoria(int idSubCategoria) {
+		this.idSubCategoria = idSubCategoria;
+	}
+
+
+	public String getNombreSubcategoria() {
+		return nombreSubcategoria;
+	}
+
+
+	public void setNombreSubcategoria(String nombreSubcategoria) {
+		this.nombreSubcategoria = nombreSubcategoria;
+	}
+
+
+	public int getIdCategoria() {
+		return idCategoria;
+	}
+
+
+	public void setIdCategoria(int idCategoria) {
+		this.idCategoria = idCategoria;
+	}
+
+
+	public String getNombreCategoria() {
+		return nombreCategoria;
+	}
+
+
+	public void setNombreCategoria(String nombreCategoria) {
+		this.nombreCategoria = nombreCategoria;
+	}
+	
+	
+	
+}

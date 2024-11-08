@@ -1,0 +1,10 @@
+server:
+  port: ${PORT:9090}
+spring:
+  application:
+    name: config-server-logimarket
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Couth21/Logi_Market.git 

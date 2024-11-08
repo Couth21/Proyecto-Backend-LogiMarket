@@ -1,0 +1,119 @@
+package com.springboot.controller;
+
+import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+
+import com.springboot.dto.InventarioDto;
+import com.springboot.entity.CategoriaEntity;
+import com.springboot.entity.InventarioEntity;
+import com.springboot.entity.ProductoEntity;
+import com.springboot.entity.SubcategoriaEntity;
+import com.springboot.service.InventarioService;
+
+import jakarta.validation.Valid;
+
+
+@RestController
+@RequestMapping("/inventario")
+@CrossOrigin("*")
+public class InventarioController 
+{
+	@Autowired
+	InventarioService inventarioService;
+	
+	
+	@GetMapping("/lista")
+	public ResponseEntity<List<InventarioEntity>> list()
+	{
+		List<InventarioEntity> list = inventarioService.list();
+		return new ResponseEntity(list,HttpStatus.OK);
+	}
+	
+
+	
+	@GetMapping("/detail/{id}")
+	public ResponseEntity<InventarioEntity> getInventarioById(@PathVariable int id)
+	{
+		Optional<InventarioEntity> inventarioEntity = inventarioService.getOne(id);
+		return inventarioEntity.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+	
+	
+	 // Endpoint para obtener los inventarios de un usuario específico
+	@GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<InventarioEntity>> obtenerInventarioPorUsuario(@PathVariable long idUsuario) {
+        try {
+            List<InventarioEntity> inventarios = inventarioService.obtenerInventarioPorUsuario(idUsuario);
+            return ResponseEntity.ok(inventarios);
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
+	 
+	
+	
+	
+	@PostMapping("/create")
+	public ResponseEntity<String> createInventario(@Valid @RequestBody InventarioDto inventarioDto) {
+	    if (areAllFieldsPresent(inventarioDto)) {
+	        InventarioEntity inventario = new InventarioEntity();
+	        inventario.setCantidadDisponible(inventarioDto.getCantidadDisponible());
+	        inventario.setPrecioPersonalizado(inventarioDto.getPrecioPersonalizado());
+	        inventario.setFechaVencimiento(inventarioDto.getFechaVencimiento());
+	        inventario.setEstadoProducto(inventarioDto.getEstadoProducto());
+	        inventario.setIdUsuario(inventarioDto.getIdUsuario());
+
+	        // Crear y asignar el producto
+	        ProductoEntity producto = new ProductoEntity();
+	        producto.setIdProducto(inventarioDto.getIdProducto());
+	        producto.setNombreProducto(inventarioDto.getNombreProducto());
+	        producto.setPrecioBase(inventarioDto.getPrecioBase());
+	        producto.setDescripcion(inventarioDto.getDescripcion());
+	        producto.setImpuestoSelectivoConsumo(inventarioDto.getImpuestoSelectivoConsumo());
+	        producto.setIgv(inventarioDto.getIgv());
+	        producto.setImagenProducto(inventarioDto.getImagenProducto());
+
+	        // Crear y asignar la subcategoría
+	        SubcategoriaEntity subcategoria = new SubcategoriaEntity();
+	        subcategoria.setIdSubCategoria(inventarioDto.getIdSubCategoria());
+	        subcategoria.setNombreSubcategoria(inventarioDto.getNombreSubcategoria());
+
+	        // Crear y asignar la categoría
+	        CategoriaEntity categoria = new CategoriaEntity();
+	        categoria.setIdCategoria(inventarioDto.getIdCategoria());
+	        categoria.setCategoria(inventarioDto.getNombreCategoria());
+
+	        // Configurar relaciones
+	        subcategoria.setCategoriaEntity(categoria);
+	        producto.setSubcategoriaEntity(subcategoria);
+	        inventario.setProductoEntity(producto);
+
+	        // Guardar el inventario y las entidades relacionadas
+	        inventarioService.save(inventario);
+
+	        return ResponseEntity.ok("Inventario creado exitosamente");
+	    }
+	    
+	}
+}

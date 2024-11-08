@@ -1,0 +1,11 @@
+package com.springboot.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.springboot.entity.InventarioEntity;
+import com.springboot.entity.ProductoEntity;
+
+public interface ProductoRepository extends JpaRepository<ProductoEntity, Integer>
+{
+
+}
