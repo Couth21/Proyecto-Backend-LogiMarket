@@ -41,9 +41,7 @@ public class UsuarioEntity
 	private List<ProductoEntity> productoEntity;
 	
 	
-	@ManyToOne
-	@JoinColumn(name = "rol_id")
-	private RolEntity rolEntity; // Asegúrate de que coincida con `mappedBy` en `RolEntity`
+	
 
 	
 

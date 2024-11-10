@@ -14,10 +14,5 @@ public interface InventarioRepository extends JpaRepository<InventarioEntity, In
     
     List<InventarioEntity> findByUsuarioEntityIdUsuario(long idUsuario); // Solo este método
     
- // Si la propiedad en InventarioEntity es 'rol', utiliza:
-    List<InventarioEntity> findByRolId(int id);
-
-    // Si la propiedad en InventarioEntity se llama 'rolEntity', utiliza:
-    List<InventarioEntity> findByRolEntityId(int id);
 
 }
