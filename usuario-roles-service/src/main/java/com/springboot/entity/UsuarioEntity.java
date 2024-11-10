@@ -20,25 +20,26 @@ public class UsuarioEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long idUsuario;
+	
     @NotNull(message = "El usuario es obligatorio")
-    
 	private String usuario;
+    
     @NotNull(message = "La contraseña es obligatoria")
-    
 	private String contraseña;
-    @NotNull(message = "El email es obligatorio")
     
+    @NotNull(message = "El email es obligatorio") 
     @Email
 	private String email;
-    @NotNull(message = "El RUC es obligatorio")
-    
+   
+    @NotNull(message = "El RUC es obligatorio") 
 	private int ruc;
-    @NotNull(message = "El DNI es obligatorio")
-    
+   
+    @NotNull(message = "El DNI es obligatorio") 
 	private int dni;
-    @NotNull(message = "El nombre de la empresa es obligatorio")
     
+    @NotNull(message = "El nombre de la empresa es obligatorio")
 	private String nombreEmpresa;
+    
     @NotNull(message = "La dirección es obligatoria")
 	private String direccion;
 
@@ -117,7 +118,7 @@ public class UsuarioEntity {
 	public long getIdUsuario() {
 		return idUsuario;
 	}
-	public void setIdUsuario(int idUsuario) {
+	public void setIdUsuario(long idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 	public int getDni() {

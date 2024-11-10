@@ -21,8 +21,6 @@ import com.springboot.entity.UsuarioEntity;
 import com.springboot.service.UsuarioService;
 
 
-
-
 @RestController
 @RequestMapping("/usuario")
 @CrossOrigin("*")
@@ -89,6 +87,15 @@ public class UsuarioController
 	
 	
 	
+	
+	
+	@GetMapping("/byUsername/{username}")
+	public ResponseEntity<UsuarioEntity> getUsuarioByUsername(@PathVariable String username) {
+	    Optional<UsuarioEntity> usuarioEntity = usuarioService.getByUsername(username);
+	    return usuarioEntity.map(ResponseEntity::ok)
+	            .orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
 	
 	
 	

@@ -1,5 +1,0 @@
-package com.springboot.repository;
-
-public interface PedidoRepository {
-
-}

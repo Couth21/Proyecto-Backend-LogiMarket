@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: usuario-roles-service
-  config:
-    import: "optional:configserver:"
-  cloud:
-    config:
-      uri: http://localhost:9090

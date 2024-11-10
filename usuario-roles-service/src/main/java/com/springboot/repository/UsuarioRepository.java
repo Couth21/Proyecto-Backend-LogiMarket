@@ -31,4 +31,6 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
     
     @Query("SELECT u FROM UsuarioEntity u WHERE u.rolEntity.idRol = :idRolProveedor")
     List<UsuarioEntity> findByRolProveedor(int idRolProveedor);
+    
+    
 }

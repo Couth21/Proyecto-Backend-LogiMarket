@@ -1,15 +1,13 @@
 package com.springboot.service;
 
-import java.util.Arrays;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
 
 import com.springboot.entity.UsuarioEntity;
 import com.springboot.repository.UsuarioRepository;
@@ -24,11 +22,16 @@ public class UsuarioService
 	@Autowired
 	UsuarioRepository usuarioRepository;
     
-    public boolean esBodeguero(long idUsuario) {
-        Optional<UsuarioEntity> usuario = usuarioRepository.findById((int) idUsuario); // Cast to Integer
-        return usuario.isPresent() && usuario.get().getRolEntity().getIdRol() == 2;
-    }
 
+
+    
+    public Optional<UsuarioEntity> getByUsername(String username) {
+        return usuarioRepository.findByUsername(username);
+    }
+    
+    
+    
+    
     //------------------------------------------------
 	
 	public List<UsuarioEntity> list()
