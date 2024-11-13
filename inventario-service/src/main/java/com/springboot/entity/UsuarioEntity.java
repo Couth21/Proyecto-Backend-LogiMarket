@@ -5,14 +5,12 @@ package com.springboot.entity;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -24,7 +22,7 @@ public class UsuarioEntity
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long idUsuario;    
 	private String usuario;
-	private String contraseña;    
+	private String contrasena;    
 	private String email;    
 	private int ruc;    
 	private int dni;    
@@ -37,8 +35,10 @@ public class UsuarioEntity
 	private List<InventarioEntity> inventarioEntity;
 	
 	@OneToMany(mappedBy = "usuarioEntity", targetEntity = ProductoEntity.class)
-	@JsonIgnore
-	private List<ProductoEntity> productoEntity;
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "usuarioEntity"}) // Evita ciclos de serialización
+	private List<ProductoEntity> productos;
+
+
 	
 	
 	
@@ -47,11 +47,11 @@ public class UsuarioEntity
 
 	
 	
-	public UsuarioEntity(String usuario, String contraseña, String email, int ruc, int dni, String nombreEmpresa,
+	public UsuarioEntity(String usuario, String contrasena, String email, int ruc, int dni, String nombreEmpresa,
 			String direccion, List<InventarioEntity> inventarioEntity) {
 		//super();
 		this.usuario = usuario;
-		this.contraseña = contraseña;
+		this.contrasena = contrasena;
 		this.email = email;
 		this.ruc = ruc;
 		this.dni = dni;
@@ -86,13 +86,13 @@ public class UsuarioEntity
 	}
 
 
-	public String getContraseña() {
-		return contraseña;
+	public String getContrasena() {
+		return contrasena;
 	}
 
 
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
 
 

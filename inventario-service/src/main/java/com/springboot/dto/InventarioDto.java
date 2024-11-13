@@ -2,8 +2,6 @@ package com.springboot.dto;
 
 import java.sql.Date;
 
-import com.springboot.entity.InventarioEntity;
-import com.springboot.entity.UsuarioEntity;
 
 
 
@@ -27,6 +25,7 @@ public class InventarioDto
     private boolean impuestoSelectivoConsumo;
     private boolean igv;
     private String imagenProducto;
+    private int stock;
 	
     
     // Detalles de la subcategoría
@@ -52,11 +51,13 @@ public class InventarioDto
 		// TODO Auto-generated constructor stub
 	}
 
+	
+
 	public InventarioDto(int cantidadDisponible, float precioPersonalizado, Date fechaVencimiento,
 			String estadoProducto, int idProducto, String nombreProducto, float precioBase, String descripcion,
-			boolean impuestoSelectivoConsumo, boolean igv, String imagenProducto, int idSubCategoria,
-			String nombreSubcategoria, int idCategoria, String nombreCategoria, long idUsuario, String usuario,
-			String contraseña, String email, int ruc, int dni, String nombreEmpresa, String direccion) {
+			boolean impuestoSelectivoConsumo, boolean igv, String imagenProducto, int stock, int idSubCategoria,
+			String nombreSubcategoria, int idCategoria, String nombreCategoria, String nombreUsuario,
+			String nombreRol) {
 		//super();
 		this.cantidadDisponible = cantidadDisponible;
 		this.precioPersonalizado = precioPersonalizado;
@@ -69,12 +70,16 @@ public class InventarioDto
 		this.impuestoSelectivoConsumo = impuestoSelectivoConsumo;
 		this.igv = igv;
 		this.imagenProducto = imagenProducto;
+		this.stock = stock;
 		this.idSubCategoria = idSubCategoria;
 		this.nombreSubcategoria = nombreSubcategoria;
 		this.idCategoria = idCategoria;
 		this.nombreCategoria = nombreCategoria;
-		
+		this.nombreUsuario = nombreUsuario;
+		this.nombreRol = nombreRol;
 	}
+
+
 
 	public int getCantidadDisponible() {
 		return cantidadDisponible;
@@ -232,6 +237,18 @@ public class InventarioDto
 
 	public void setNombreRol(String nombreRol) {
 		this.nombreRol = nombreRol;
+	}
+
+
+
+	public int getStock() {
+		return stock;
+	}
+
+
+
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 
 

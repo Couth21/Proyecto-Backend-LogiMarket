@@ -21,6 +21,7 @@ public class InventarioEntity
 	private float precioPersonalizado;
 	private Date fechaVencimiento;
 	private String estadoProducto;
+	private int stock;
 	
 	
 	
@@ -36,15 +37,20 @@ public class InventarioEntity
 	
 	
 	
+	
+	
 	public InventarioEntity(int cantidadDisponible, float precioPersonalizado, Date fechaVencimiento,
-			String estadoProducto) {
-		//super();
+			String estadoProducto, int stock, ProductoEntity productoEntity, UsuarioEntity usuarioEntity) {
+		super();
 		this.cantidadDisponible = cantidadDisponible;
 		this.precioPersonalizado = precioPersonalizado;
 		this.fechaVencimiento = fechaVencimiento;
 		this.estadoProducto = estadoProducto;
+		this.stock = stock;
+		this.productoEntity = productoEntity;
+		this.usuarioEntity = usuarioEntity;
 	}
-	
+
 	public InventarioEntity() {
 		// TODO Auto-generated constructor stub
 	}
@@ -104,6 +110,14 @@ public class InventarioEntity
     public void setUsuarioEntity(UsuarioEntity usuarioEntity) {
         this.usuarioEntity = usuarioEntity;
     }
+
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
 	
 	
 }

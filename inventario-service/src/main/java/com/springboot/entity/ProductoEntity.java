@@ -4,16 +4,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -32,28 +29,52 @@ public class ProductoEntity
 	
 	
 
-	
+	/*
 	//1 producto solo pertenece a una subcategoria
 	@OneToOne
 	@JoinColumn(name="idSubcategoria")
 	private SubcategoriaEntity subcategoriaEntity;
+	_*/
+
+
+
+
+
+	
+	
 	
 	//1 producto puede tener múltiples inventarios
 	@OneToMany(mappedBy = "productoEntity", targetEntity = InventarioEntity.class)
 	@JsonIgnore
 	private List<InventarioEntity> inventarioEntity;
 	
+	/*
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_usuario")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "productos"}) // Evita referencias cíclicas y problemas de proxy
+	private UsuarioEntity usuarioEntity;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
+	@JoinColumn(name = "idSubcategoria", nullable = false)
+	private SubcategoriaEntity subcategoria;
+	*/
+	
+	
+	@ManyToOne
+	@JoinColumn(name = "id_subcategoria")
+	private SubcategoriaEntity subcategoria;
+
+	@ManyToOne
 	@JoinColumn(name = "id_usuario")
 	private UsuarioEntity usuarioEntity;
 
 	
 	
+
 	
 	public ProductoEntity(String nombreProducto, float precioBase, String descripcion, boolean impuestoSelectivoConsumo,
-			boolean igv, String imagenProducto, SubcategoriaEntity subcategoriaEntity,
-			List<InventarioEntity> inventarioEntity) {
+			boolean igv, String imagenProducto, SubcategoriaEntity subcategoria,
+			List<InventarioEntity> inventarioEntity, UsuarioEntity usuarioEntity) {
 		//super();
 		this.nombreProducto = nombreProducto;
 		this.precioBase = precioBase;
@@ -61,11 +82,11 @@ public class ProductoEntity
 		this.impuestoSelectivoConsumo = impuestoSelectivoConsumo;
 		this.igv = igv;
 		this.imagenProducto = imagenProducto;
-		this.subcategoriaEntity = subcategoriaEntity;
+		this.subcategoria = subcategoria;
 		this.inventarioEntity = inventarioEntity;
+		this.usuarioEntity = usuarioEntity;
 	}
 
-	
 	public ProductoEntity() {
 		// TODO Auto-generated constructor stub
 	}
@@ -126,13 +147,7 @@ public class ProductoEntity
 		this.imagenProducto = imagenProducto;
 	}
 
-	public SubcategoriaEntity getSubcategoriaEntity() {
-		return subcategoriaEntity;
-	}
-
-	public void setSubcategoriaEntity(SubcategoriaEntity subcategoriaEntity) {
-		this.subcategoriaEntity = subcategoriaEntity;
-	}
+	
 
 	public List<InventarioEntity> getInventarioEntity() {
 		return inventarioEntity;
@@ -142,6 +157,22 @@ public class ProductoEntity
 		this.inventarioEntity = inventarioEntity;
 	}
 
+	public SubcategoriaEntity getSubcategoria() {
+		return subcategoria;
+	}
 
+	public void setSubcategoria(SubcategoriaEntity subcategoria) {
+		this.subcategoria = subcategoria;
+	}
+
+	public UsuarioEntity getUsuarioEntity() {
+		return usuarioEntity;
+	}
+
+	public void setUsuarioEntity(UsuarioEntity usuarioEntity) {
+		this.usuarioEntity = usuarioEntity;
+	}
+
+	
 	
 }

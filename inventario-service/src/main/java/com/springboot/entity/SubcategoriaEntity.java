@@ -1,9 +1,11 @@
 package com.springboot.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,27 +23,31 @@ public class SubcategoriaEntity {
 	private int idSubCategoria;
 	private String nombreSubcategoria;
 
-	/*
-	 * // 1 subcategoria solo pertenece a una categoria
-	 * 
-	 * @ManyToOne
-	 * 
-	 * @JoinColumn(name = "idCategoria") private CategoriaEntity categoriaEntity;
-	 * 
-	 */
-
-	// 1 subcategoria puede tener muchos productos
-	@OneToMany(mappedBy = "subcategoriaEntity")
-	@JsonIgnore
-	private List<ProductoEntity> productoEntity;
-
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "idCategoria", nullable = false)
 	private CategoriaEntity categoriaEntity;
+	
+	
+	
 
-	public SubcategoriaEntity(String nombreSubcategoria) {
-		// super();
+	@OneToMany(mappedBy = "subcategoria", cascade = CascadeType.ALL) // Cambiado a "subcategoria"
+	@JsonIgnore
+	private List<ProductoEntity> productos = new ArrayList<>();
+
+	
+	
+	
+	
+	
+
+	public SubcategoriaEntity(String nombreSubcategoria, CategoriaEntity categoriaEntity,
+			List<ProductoEntity> productos) {
+		//super();
 		this.nombreSubcategoria = nombreSubcategoria;
+		this.categoriaEntity = categoriaEntity;
+		this.productos = productos;
 	}
 
 	public SubcategoriaEntity() {
@@ -73,11 +78,13 @@ public class SubcategoriaEntity {
 		this.categoriaEntity = categoriaEntity; // Asigna un objeto CategoriaEntity
 	}
 
-	public List<ProductoEntity> getProductoEntity() {
-		return productoEntity;
+	public List<ProductoEntity> getProductos() {
+		return productos;
 	}
 
-	public void setProductoEntity(List<ProductoEntity> productoEntity) {
-		this.productoEntity = productoEntity;
+	public void setProductos(List<ProductoEntity> productos) {
+		this.productos = productos;
 	}
+
+
 }

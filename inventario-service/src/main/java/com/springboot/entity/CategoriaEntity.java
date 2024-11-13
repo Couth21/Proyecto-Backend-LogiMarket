@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,9 +21,11 @@ public class CategoriaEntity {
 	private String categoria;
 
 	// 1 categoria puede tener muchas subcategorias
-	@OneToMany(mappedBy = "categoriaEntity")
+	@OneToMany(mappedBy = "categoriaEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private List<SubcategoriaEntity> subcategoriaEntity;
+	
+	
 
 	public CategoriaEntity(String categoria) {
 		// super();
