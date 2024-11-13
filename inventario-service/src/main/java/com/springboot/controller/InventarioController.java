@@ -145,15 +145,26 @@ public class InventarioController {
 		List<ProductoEntity> productos = inventarioService.obtenerProductosPorUsuario(idUsuario);
 		return new ResponseEntity<>(productos, HttpStatus.OK);
 	}
+	
+	@GetMapping("/lstProductos/{idUsuario}/{idSubcategoria}")
+	public ResponseEntity<List<ProductoEntity>> listarProductosPorUsuarioYSubcategoria(
+	        @PathVariable("idUsuario") long idUsuario,
+	        @PathVariable("idSubcategoria") int idSubcategoria) {
+	    
+	    List<ProductoEntity> productos = inventarioService.obtenerProductosPorUsuarioYSubcategoria(idUsuario, idSubcategoria);
+	    
+	    return new ResponseEntity<>(productos, HttpStatus.OK);
+	}
 
 	// Método alternativo para editar producto usando ProductoEntity
 	@PutMapping("/editarProductoDto")
 	public ResponseEntity<ProductoEntity> editarProducto(@RequestBody ProductoDto productoDto) {
-		// lógica del método
-		ProductoEntity productoActualizado = inventarioService.editarProducto(productoDto.getProducto(),
-				productoDto.getIdProducto(), // Este valor debe ser un long, no un int
-				productoDto.getIdUsuario(), productoDto.getIdSubCategoria());
-		return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
+	    // Obtener el ID del producto directamente desde el objeto ProductoEntity dentro de ProductoDto
+	    int idProducto = productoDto.getProducto().getIdProducto();
+	    ProductoEntity productoActualizado = inventarioService.editarProducto(
+	            productoDto.getProducto(), idProducto, productoDto.getIdUsuario(), productoDto.getIdSubCategoria()
+	    );
+	    return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/eliminarProducto/{idProducto}")

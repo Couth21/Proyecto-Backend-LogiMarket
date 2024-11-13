@@ -9,4 +9,9 @@ import com.springboot.entity.ProductoEntity;
 public interface ProductoRepository extends JpaRepository<ProductoEntity, Integer> 
 {
 	List<ProductoEntity> findByUsuarioEntityIdUsuario(long idUsuario);
+	/*
+	List<ProductoEntity> findByUsuarioIdAndSubcategoriaId(long idUsuario, int idSubcategoria);
+	*/
+	List<ProductoEntity> findByUsuarioEntity_IdUsuarioAndSubcategoria_IdSubCategoria(long idUsuario, int idSubCategoria);
+
 }

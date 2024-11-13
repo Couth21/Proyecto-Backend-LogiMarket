@@ -170,34 +170,37 @@ public class InventarioService {
 //-----------------------------------------------------PRODUCTO-----------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 
-	// Asegúrate de que el método editarProducto en InventarioService tenga esta
-	// firma
 	public ProductoEntity editarProducto(ProductoEntity producto, long idProducto, long idUsuario, int idSubCategoria) {
-		// Verificar si el producto existe
-		ProductoEntity productoExistente = productoRepository.findById((int) idProducto)
-				.orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + idProducto));
+	    // Cast idProducto to Integer to match the repository's expected type
+	    Optional<ProductoEntity> productoExistenteOpt = productoRepository.findById((int) idProducto);
 
-		// Obtener el usuario
-		UsuarioEntity usuario = getUsuarioEntity(idUsuario);
-		if (usuario == null) {
-			throw new IllegalArgumentException("Usuario no encontrado con ID: " + idUsuario);
-		}
+	    if (productoExistenteOpt.isPresent()) {
+	        ProductoEntity productoExistente = productoExistenteOpt.get();
 
-		// Obtener la subcategoría
-		SubcategoriaEntity subcategoria = subcategoriaRepository.findById(idSubCategoria).orElseThrow(
-				() -> new IllegalArgumentException("Subcategoría no encontrada con ID: " + idSubCategoria));
+	        // Update product details
+	        productoExistente.setNombreProducto(producto.getNombreProducto());
+	        productoExistente.setPrecioBase(producto.getPrecioBase());
+	        productoExistente.setDescripcion(producto.getDescripcion());
+	        productoExistente.setImpuestoSelectivoConsumo(producto.isImpuestoSelectivoConsumo());
+	        productoExistente.setIgv(producto.isIgv());
+	        productoExistente.setImagenProducto(producto.getImagenProducto());
+	        productoExistente.setStock(producto.getStock());
 
-		// Actualizar los campos del producto
-		productoExistente.setNombreProducto(producto.getNombreProducto() != null ? producto.getNombreProducto()
-				: productoExistente.getNombreProducto());
-		productoExistente.setPrecioBase(
-				producto.getPrecioBase() != 0 ? producto.getPrecioBase() : productoExistente.getPrecioBase());
-		productoExistente.setDescripcion(
-				producto.getDescripcion() != null ? producto.getDescripcion() : productoExistente.getDescripcion());
-		productoExistente.setUsuarioEntity(usuario);
-		productoExistente.setSubcategoria(subcategoria); // Solo se asigna la subcategoría
+	        // Set subcategory
+	        SubcategoriaEntity subcategoria = new SubcategoriaEntity();
+	        subcategoria.setIdSubCategoria(idSubCategoria);
+	        productoExistente.setSubcategoria(subcategoria);
 
-		return productoRepository.save(productoExistente);
+	        // Set user
+	        UsuarioEntity usuario = new UsuarioEntity();
+	        usuario.setIdUsuario((int) idUsuario); // Assuming idUsuario is also Integer type
+	        productoExistente.setUsuarioEntity(usuario);
+
+	        // Save and return the updated product
+	        return productoRepository.save(productoExistente);
+	    } else {
+	        throw new IllegalArgumentException("Producto no encontrado con ID: " + idProducto);
+	    }
 	}
 
 	// Método para listar todos los productos
@@ -242,6 +245,11 @@ public class InventarioService {
 		SubcategoriaEntity subcategoria = subcategoriaRepository.findById(idSubCategoria)
 				.orElseThrow(() -> new IllegalArgumentException("Subcategoría no encontrada"));
 		return subcategoria.getProductos();
+	}
+
+	public List<ProductoEntity> obtenerProductosPorUsuarioYSubcategoria(long idUsuario, int idSubcategoria) {
+		return productoRepository.findByUsuarioEntity_IdUsuarioAndSubcategoria_IdSubCategoria(idUsuario,
+				idSubcategoria);
 	}
 
 //-------------------------------------------------------------------------------------------------------------------	

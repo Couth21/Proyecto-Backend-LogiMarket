@@ -3,7 +3,6 @@ package com.springboot.dto;
 import com.springboot.entity.ProductoEntity;
 
 public class ProductoDto {
-	private long idProducto;
 	private long idUsuario;
     private int idSubCategoria;
     private ProductoEntity producto;
@@ -28,12 +27,7 @@ public class ProductoDto {
 	public void setProducto(ProductoEntity producto) {
 		this.producto = producto;
 	}
-	public long getIdProducto() {
-		return idProducto;
-	}
-	public void setIdProducto(long idProducto) {
-		this.idProducto = idProducto;
-	}
+
 	public int getIdCategoria() {
 		return idCategoria;
 	}

@@ -26,6 +26,8 @@ public class ProductoEntity
 	private boolean impuestoSelectivoConsumo;
 	private boolean igv;
 	private String imagenProducto;
+	private int stock;
+
 	
 	
 
@@ -72,9 +74,11 @@ public class ProductoEntity
 	
 
 	
+	
+
 	public ProductoEntity(String nombreProducto, float precioBase, String descripcion, boolean impuestoSelectivoConsumo,
-			boolean igv, String imagenProducto, SubcategoriaEntity subcategoria,
-			List<InventarioEntity> inventarioEntity, UsuarioEntity usuarioEntity) {
+			boolean igv, String imagenProducto, int stock, List<InventarioEntity> inventarioEntity,
+			SubcategoriaEntity subcategoria, UsuarioEntity usuarioEntity) {
 		//super();
 		this.nombreProducto = nombreProducto;
 		this.precioBase = precioBase;
@@ -82,8 +86,9 @@ public class ProductoEntity
 		this.impuestoSelectivoConsumo = impuestoSelectivoConsumo;
 		this.igv = igv;
 		this.imagenProducto = imagenProducto;
-		this.subcategoria = subcategoria;
+		this.stock = stock;
 		this.inventarioEntity = inventarioEntity;
+		this.subcategoria = subcategoria;
 		this.usuarioEntity = usuarioEntity;
 	}
 
@@ -171,6 +176,14 @@ public class ProductoEntity
 
 	public void setUsuarioEntity(UsuarioEntity usuarioEntity) {
 		this.usuarioEntity = usuarioEntity;
+	}
+
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 
 	
