@@ -84,7 +84,7 @@ public class UsuarioService
 	    if (usuarioEntity.getUsuario() == null || usuarioEntity.getUsuario().isEmpty()) {
 	        return "Error: El nombre de usuario es obligatorio.";
 	    }
-	    if (usuarioEntity.getContraseña() == null || usuarioEntity.getContraseña().isEmpty()) {
+	    if (usuarioEntity.getContrasena() == null || usuarioEntity.getContrasena().isEmpty()) {
 	        return "Error: La contraseña es obligatoria.";
 	    }
 	    if (usuarioEntity.getEmail() == null || usuarioEntity.getEmail().isEmpty()) {

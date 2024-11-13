@@ -51,7 +51,7 @@ public class InventarioController
     
     //--------------------------------------------------------------------
     @GetMapping("/listarSubcategorias/{idCategoria}")
-    public ResponseEntity<?> listarSubcategoriasPorCategoria(@PathVariable int idCategoria) {
+    public ResponseEntity<?> listarSubcategoriasPorCategoria(@PathVariable("idCategoria") int idCategoria) {
         try {
             List<SubcategoriaEntity> subcategorias = inventarioService.obtenerSubcategoriasPorCategoria(idCategoria);
             return ResponseEntity.ok(subcategorias);

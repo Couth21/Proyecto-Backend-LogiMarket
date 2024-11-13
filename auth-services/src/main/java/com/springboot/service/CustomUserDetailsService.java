@@ -24,12 +24,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         // Imprime la contraseña obtenida para depuración
-        System.out.println("Contraseña obtenida de la base de datos: " + user.getContraseña());
+        System.out.println("Contraseña obtenida de la base de datos: " + user.getContrasena());
 
         // Retorna un UserDetails con los datos del usuario
         return new org.springframework.security.core.userdetails.User(
                 user.getUsuario(),
-                user.getContraseña(),
+                user.getContrasena(),
                 Collections.emptyList() // Ajusta los roles y permisos según tu lógica
         );
     }

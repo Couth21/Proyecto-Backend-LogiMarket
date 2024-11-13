@@ -7,7 +7,7 @@ public class UsuarioDto {
     @NotNull(message = "El usuario es obligatorio")
     private String usuario;
 
-    @NotNull(message = "La contraseña es obligatoria")
+    @NotNull(message = "La contrasena es obligatoria")
     private String contrasena;
 
     @NotNull(message = "El email es obligatorio")

@@ -24,8 +24,8 @@ public class UsuarioEntity {
     @NotNull(message = "El usuario es obligatorio")
 	private String usuario;
     
-    @NotNull(message = "La contraseña es obligatoria")
-	private String contraseña;
+    @NotNull(message = "La contrasena es obligatoria")
+	private String contrasena;
     
     @NotNull(message = "El email es obligatorio") 
     @Email
@@ -58,11 +58,11 @@ public class UsuarioEntity {
 	
 	
 	
-	public UsuarioEntity(String usuario, String contraseña, String email, int ruc, String nombreEmpresa,
+	public UsuarioEntity(String usuario, String contrasena, String email, int ruc, String nombreEmpresa,
 			String direccion, RolEntity rolEntity, int dni) {
 		//super();
 		this.usuario = usuario;
-		this.contraseña = contraseña;
+		this.contrasena = contrasena;
 		this.email = email;
 		this.ruc = ruc;
 		this.nombreEmpresa = nombreEmpresa;
@@ -79,11 +79,11 @@ public class UsuarioEntity {
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
 	}
-	public String getContraseña() {
-		return contraseña;
+	public String getContrasena() {
+		return contrasena;
 	}
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
 	public String getEmail() {
 		return email;
