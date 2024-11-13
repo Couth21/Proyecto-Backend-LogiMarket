@@ -25,7 +25,7 @@ public class InventarioDto
     private boolean impuestoSelectivoConsumo;
     private boolean igv;
     private String imagenProducto;
-    private int stock;
+
 	
     
     // Detalles de la subcategoría
@@ -70,7 +70,7 @@ public class InventarioDto
 		this.impuestoSelectivoConsumo = impuestoSelectivoConsumo;
 		this.igv = igv;
 		this.imagenProducto = imagenProducto;
-		this.stock = stock;
+
 		this.idSubCategoria = idSubCategoria;
 		this.nombreSubcategoria = nombreSubcategoria;
 		this.idCategoria = idCategoria;
@@ -241,15 +241,7 @@ public class InventarioDto
 
 
 
-	public int getStock() {
-		return stock;
-	}
-
-
-
-	public void setStock(int stock) {
-		this.stock = stock;
-	}
+	
 
 
 	

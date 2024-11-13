@@ -21,7 +21,6 @@ import com.springboot.entity.CategoriaEntity;
 import com.springboot.entity.InventarioEntity;
 import com.springboot.entity.ProductoEntity;
 import com.springboot.entity.SubcategoriaEntity;
-import com.springboot.entity.UsuarioEntity;
 import com.springboot.service.InventarioService;
 
 import jakarta.validation.Valid;
@@ -176,88 +175,51 @@ public class InventarioController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-//--------------------------------------------------------------------------------
-
-	/*
-	 * @GetMapping("/listarInventarios") public
-	 * ResponseEntity<List<InventarioEntity>> listarInventarios() {
-	 * List<InventarioEntity> inventarios = inventarioService.listarInventarios();
-	 * return ResponseEntity.ok(inventarios); }
-	 * 
-	 */
-
+//-------------------------------------------------------------------------------------------------------
+//--------------------------------------------INVENTARIO--------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
+	
 	@GetMapping("/listarInventarios")
-	public ResponseEntity<List<InventarioEntity>> listarInventarios() {
-		List<InventarioEntity> inventarios = inventarioService.listarInventarios();
-		// Para cada inventario, cargar el usuario a través del servicio externo
-		inventarios.forEach(inventario -> {
-			if (inventario.getUsuarioEntity() == null) {
-				UsuarioEntity usuario = inventarioService
-						.getUsuarioEntity(inventario.getUsuarioEntity().getIdUsuario());
-				inventario.setUsuarioEntity(usuario);
-			}
-		});
-		return ResponseEntity.ok(inventarios);
-	}
+    public ResponseEntity<List<InventarioEntity>> listarInventarios() {
+        List<InventarioEntity> inventarios = inventarioService.listarInventarios();
+        return ResponseEntity.ok(inventarios);
+    }
 
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> delete(@PathVariable int id) {
-		if (!inventarioService.existsById(id)) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Inventario no encontrado");
-		}
-		inventarioService.delete(id);
-		return ResponseEntity.ok("Inventario eliminado exitosamente");
-	}
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<InventarioEntity> getInventarioById(@PathVariable int id) {
+        Optional<InventarioEntity> inventario = inventarioService.getInventarioById(id);
+        return inventario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 
-	@GetMapping("/detail/{id}")
-	public ResponseEntity<InventarioEntity> getInventarioById(@PathVariable int id) {
-		Optional<InventarioEntity> inventarioEntity = inventarioService.getOne(id);
-		return inventarioEntity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @PostMapping("/crearInventario")
+    public ResponseEntity<InventarioEntity> crearInventario(@Valid @RequestBody InventarioEntity inventario) {
+        InventarioEntity nuevoInventario = inventarioService.crearInventario(inventario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoInventario);
+    }
 
-	// Endpoint para editar inventario
-	@PutMapping("/editarInventario")
-	public ResponseEntity<?> editarInventario(@Valid @RequestBody InventarioEntity inventario) {
-		try {
-			InventarioEntity inventarioActualizado = inventarioService.editarInventario(inventario);
-			return ResponseEntity.ok(inventarioActualizado);
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el inventario.");
-		}
-	}
+    @PutMapping("/editarInventario")
+    public ResponseEntity<?> editarInventario(@Valid @RequestBody InventarioEntity inventario) {
+        try {
+            InventarioEntity inventarioActualizado = inventarioService.editarInventario(inventario);
+            return ResponseEntity.ok(inventarioActualizado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
-//-----------------------------------------------
-
-//------------------------------------------------------
-
-	/*
-	 * @PostMapping("/crearProducto") public ResponseEntity<String>
-	 * crearProducto(@Valid @RequestBody ProductoEntity productoEntity) {
-	 * inventarioService.crearProducto(productoEntity); return
-	 * ResponseEntity.ok("Producto creado exitosamente"); }
-	 */
-
-	@PostMapping("/crearInventario")
-	public ResponseEntity<String> crearInventario(@Valid @RequestBody InventarioEntity inventarioEntity) {
-		inventarioService.crearInventario(inventarioEntity);
-		return ResponseEntity.ok("Inventario creado exitosamente");
-	}
-
-	/*
-	 * // Endpoint para obtener los productos de un proveedor específico
-	 * 
-	 * @GetMapping("/productos/usuario/{idUsuario}") public ResponseEntity<?>
-	 * obtenerProductosPorUsuario(@PathVariable long idUsuario) { try {
-	 * List<ProductoEntity> productos =
-	 * inventarioService.obtenerProductosPorUsuario(idUsuario); return
-	 * ResponseEntity.ok(productos); } catch (AccessDeniedException e) { return
-	 * ResponseEntity.status(HttpStatus.FORBIDDEN).
-	 * body("Acceso denegado. Solo los proveedores pueden ver los productos."); }
-	 * catch (Exception e) { return
-	 * ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
-	 * body("Error al obtener los productos del usuario."); } }
-	 */
-
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteInventario(@PathVariable int id) {
+        if (!inventarioService.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Inventario no encontrado");
+        }
+        inventarioService.eliminarInventario(id);
+        return ResponseEntity.ok("Inventario eliminado exitosamente");
+    }
+    
+    
+    @GetMapping("/listarInventario/{idUsuario}")
+    public ResponseEntity<List<InventarioEntity>> listarInventarioPorUsuario(@PathVariable int idUsuario) {
+        List<InventarioEntity> inventarios = inventarioService.listarInventariosPorUsuario(idUsuario);
+        return ResponseEntity.ok(inventarios);
+    }
 }

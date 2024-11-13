@@ -14,5 +14,5 @@ public interface InventarioRepository extends JpaRepository<InventarioEntity, In
     
     List<InventarioEntity> findByUsuarioEntityIdUsuario(long idUsuario); // Solo este método
     
-
+    List<InventarioEntity> findByUsuarioEntity_IdUsuario(int idUsuario);
 }

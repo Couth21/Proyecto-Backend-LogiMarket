@@ -256,71 +256,43 @@ public class InventarioService {
 //--------------------------------------------INVENTARIO-------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------
 
-	public void crearInventario(InventarioEntity inventario) {
-		inventarioRepository.save(inventario);
-	}
+    public List<InventarioEntity> listarInventarios() {
+        return inventarioRepository.findAll();
+    }
 
-	// Métodos CRUD de Inventario
-	public Optional<InventarioEntity> getOne(int id) {
-		return inventarioRepository.findById(id);
-	}
+    public Optional<InventarioEntity> getInventarioById(int id) {
+        return inventarioRepository.findById(id);
+    }
 
-	public List<InventarioEntity> list() {
-		return inventarioRepository.findAll();
-	}
+    public void eliminarInventario(int id) {
+        inventarioRepository.deleteById(id);
+    }
 
-	public void delete(int id) {
-		inventarioRepository.deleteById(id);
-	}
+    public boolean existsById(int id) {
+        return inventarioRepository.existsById(id);
+    }
 
-	public boolean existsById(int id) {
-		return inventarioRepository.existsById(id);
-	}
+    public InventarioEntity crearInventario(InventarioEntity inventario) {
+        return inventarioRepository.save(inventario);
+    }
 
-	public boolean existsByCantidadDisponible(int cantidadDisponible) {
-		return inventarioRepository.existsByCantidadDisponible(cantidadDisponible);
-	}
-
-	public List<InventarioEntity> listarInventarios() {
-		return inventarioRepository.findAll();
-	}
-
-	// Métodos de edición para cada entidad
-
-	// Método para editar inventario
-	public InventarioEntity editarInventario(InventarioEntity inventario) {
-		Optional<InventarioEntity> inventarioExistente = inventarioRepository.findById(inventario.getIdInventario());
-
-		if (inventarioExistente.isPresent()) {
-			InventarioEntity inventarioActualizado = inventarioExistente.get();
-
-			if (inventario.getCantidadDisponible() != 0) {
-				inventarioActualizado.setCantidadDisponible(inventario.getCantidadDisponible());
-			}
-			if (inventario.getPrecioPersonalizado() != 0) {
-				inventarioActualizado.setPrecioPersonalizado(inventario.getPrecioPersonalizado());
-			}
-			if (inventario.getFechaVencimiento() != null) {
-				inventarioActualizado.setFechaVencimiento(inventario.getFechaVencimiento());
-			}
-			if (inventario.getEstadoProducto() != null) {
-				inventarioActualizado.setEstadoProducto(inventario.getEstadoProducto());
-			}
-			if (inventario.getProductoEntity() != null) {
-				ProductoEntity producto = productoRepository.findById(inventario.getProductoEntity().getIdProducto())
-						.orElseThrow(() -> new IllegalArgumentException("Producto no encontrado."));
-				inventarioActualizado.setProductoEntity(producto);
-			}
-
-			try {
-				return inventarioRepository.save(inventarioActualizado);
-			} catch (DataIntegrityViolationException e) {
-				throw new IllegalArgumentException(
-						"Error al actualizar el inventario debido a una violación de integridad de datos.");
-			}
-		} else {
-			throw new IllegalArgumentException("Inventario no encontrado.");
-		}
-	}
-
+    public InventarioEntity editarInventario(InventarioEntity inventario) {
+        Optional<InventarioEntity> inventarioExistente = inventarioRepository.findById(inventario.getIdInventario());
+        if (inventarioExistente.isPresent()) {
+            InventarioEntity inventarioActualizado = inventarioExistente.get();
+            inventarioActualizado.setCantidadDisponible(inventario.getCantidadDisponible());
+            inventarioActualizado.setPrecioPersonalizado(inventario.getPrecioPersonalizado());
+            inventarioActualizado.setFechaVencimiento(inventario.getFechaVencimiento());
+            inventarioActualizado.setEstadoProducto(inventario.getEstadoProducto());
+            inventarioActualizado.setProductoEntity(inventario.getProductoEntity());
+            inventarioActualizado.setUsuarioEntity(inventario.getUsuarioEntity());
+            return inventarioRepository.save(inventarioActualizado);
+        } else {
+            throw new IllegalArgumentException("Inventario no encontrado.");
+        }
+    }
+    
+    public List<InventarioEntity> listarInventariosPorUsuario(int idUsuario) {
+        return inventarioRepository.findByUsuarioEntity_IdUsuario(idUsuario);
+    }
 }
