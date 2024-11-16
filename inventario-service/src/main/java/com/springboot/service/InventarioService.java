@@ -15,6 +15,8 @@ import com.springboot.entity.InventarioEntity;
 import com.springboot.entity.ProductoEntity;
 import com.springboot.entity.SubcategoriaEntity;
 import com.springboot.entity.UsuarioEntity;
+import com.springboot.exception.InsufficientStockException;
+import com.springboot.exception.ResourceNotFoundException;
 import com.springboot.repository.CategoriaRepository;
 import com.springboot.repository.InventarioRepository;
 import com.springboot.repository.ProductoRepository;
@@ -171,36 +173,36 @@ public class InventarioService {
 //------------------------------------------------------------------------------------------------------------------------
 
 	public ProductoEntity editarProducto(ProductoEntity producto, long idProducto, long idUsuario, int idSubCategoria) {
-	    // Cast idProducto to Integer to match the repository's expected type
-	    Optional<ProductoEntity> productoExistenteOpt = productoRepository.findById((int) idProducto);
+		// Cast idProducto to Integer to match the repository's expected type
+		Optional<ProductoEntity> productoExistenteOpt = productoRepository.findById((int) idProducto);
 
-	    if (productoExistenteOpt.isPresent()) {
-	        ProductoEntity productoExistente = productoExistenteOpt.get();
+		if (productoExistenteOpt.isPresent()) {
+			ProductoEntity productoExistente = productoExistenteOpt.get();
 
-	        // Update product details
-	        productoExistente.setNombreProducto(producto.getNombreProducto());
-	        productoExistente.setPrecioBase(producto.getPrecioBase());
-	        productoExistente.setDescripcion(producto.getDescripcion());
-	        productoExistente.setImpuestoSelectivoConsumo(producto.isImpuestoSelectivoConsumo());
-	        productoExistente.setIgv(producto.isIgv());
-	        productoExistente.setImagenProducto(producto.getImagenProducto());
-	        productoExistente.setStock(producto.getStock());
+			// Update product details
+			productoExistente.setNombreProducto(producto.getNombreProducto());
+			productoExistente.setPrecioBase(producto.getPrecioBase());
+			productoExistente.setDescripcion(producto.getDescripcion());
+			productoExistente.setImpuestoSelectivoConsumo(producto.isImpuestoSelectivoConsumo());
+			productoExistente.setIgv(producto.isIgv());
+			productoExistente.setImagenProducto(producto.getImagenProducto());
+			productoExistente.setStock(producto.getStock());
 
-	        // Set subcategory
-	        SubcategoriaEntity subcategoria = new SubcategoriaEntity();
-	        subcategoria.setIdSubCategoria(idSubCategoria);
-	        productoExistente.setSubcategoria(subcategoria);
+			// Set subcategory
+			SubcategoriaEntity subcategoria = new SubcategoriaEntity();
+			subcategoria.setIdSubCategoria(idSubCategoria);
+			productoExistente.setSubcategoria(subcategoria);
 
-	        // Set user
-	        UsuarioEntity usuario = new UsuarioEntity();
-	        usuario.setIdUsuario((int) idUsuario); // Assuming idUsuario is also Integer type
-	        productoExistente.setUsuarioEntity(usuario);
+			// Set user
+			UsuarioEntity usuario = new UsuarioEntity();
+			usuario.setIdUsuario((int) idUsuario); // Assuming idUsuario is also Integer type
+			productoExistente.setUsuarioEntity(usuario);
 
-	        // Save and return the updated product
-	        return productoRepository.save(productoExistente);
-	    } else {
-	        throw new IllegalArgumentException("Producto no encontrado con ID: " + idProducto);
-	    }
+			// Save and return the updated product
+			return productoRepository.save(productoExistente);
+		} else {
+			throw new IllegalArgumentException("Producto no encontrado con ID: " + idProducto);
+		}
 	}
 
 	// Método para listar todos los productos
@@ -251,48 +253,112 @@ public class InventarioService {
 		return productoRepository.findByUsuarioEntity_IdUsuarioAndSubcategoria_IdSubCategoria(idUsuario,
 				idSubcategoria);
 	}
+	/*
+	public ProductoEntity obtenerProductoPorId(int idProducto) {
+		return productoRepository.findById(idProducto).orElse(null);
+	}
+	*/
+	//.....................................................................
+	//........................................................................
+	// Método para verificar stock disponible
+    public void verificarStockDisponible(int productoId, int cantidadSolicitada) {
+        ProductoEntity producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
 
+        if (producto.getStock() < cantidadSolicitada) {
+            throw new InsufficientStockException("Stock insuficiente para el producto: " + producto.getNombreProducto());
+        }
+    }
+
+    // Método para actualizar el stock tras una compra
+    public void actualizarStock(int productoId, int cantidadComprada) {
+        ProductoEntity producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
+
+        // Resta la cantidad comprada del stock actual
+        producto.setStock(producto.getStock() - cantidadComprada);
+        productoRepository.save(producto);
+    }
 //-------------------------------------------------------------------------------------------------------------------	
 //--------------------------------------------INVENTARIO-------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------
 
-    public List<InventarioEntity> listarInventarios() {
-        return inventarioRepository.findAll();
-    }
+	public List<InventarioEntity> listarInventarios() {
+		return inventarioRepository.findAll();
+	}
 
-    public Optional<InventarioEntity> getInventarioById(int id) {
-        return inventarioRepository.findById(id);
-    }
+	public Optional<InventarioEntity> getInventarioById(int id) {
+		return inventarioRepository.findById(id);
+	}
 
-    public void eliminarInventario(int id) {
-        inventarioRepository.deleteById(id);
-    }
+	public void eliminarInventario(int id) {
+		inventarioRepository.deleteById(id);
+	}
 
-    public boolean existsById(int id) {
-        return inventarioRepository.existsById(id);
-    }
+	public boolean existsById(int id) {
+		return inventarioRepository.existsById(id);
+	}
 
-    public InventarioEntity crearInventario(InventarioEntity inventario) {
-        return inventarioRepository.save(inventario);
-    }
+	public InventarioEntity crearInventario(InventarioEntity inventario) {
+		return inventarioRepository.save(inventario);
+	}
 
-    public InventarioEntity editarInventario(InventarioEntity inventario) {
-        Optional<InventarioEntity> inventarioExistente = inventarioRepository.findById(inventario.getIdInventario());
-        if (inventarioExistente.isPresent()) {
-            InventarioEntity inventarioActualizado = inventarioExistente.get();
-            inventarioActualizado.setCantidadDisponible(inventario.getCantidadDisponible());
-            inventarioActualizado.setPrecioPersonalizado(inventario.getPrecioPersonalizado());
-            inventarioActualizado.setFechaVencimiento(inventario.getFechaVencimiento());
-            inventarioActualizado.setEstadoProducto(inventario.getEstadoProducto());
-            inventarioActualizado.setProductoEntity(inventario.getProductoEntity());
-            inventarioActualizado.setUsuarioEntity(inventario.getUsuarioEntity());
-            return inventarioRepository.save(inventarioActualizado);
-        } else {
-            throw new IllegalArgumentException("Inventario no encontrado.");
-        }
-    }
-    
-    public List<InventarioEntity> listarInventariosPorUsuario(int idUsuario) {
-        return inventarioRepository.findByUsuarioEntity_IdUsuario(idUsuario);
-    }
+	public InventarioEntity editarInventario(InventarioEntity inventario) {
+		Optional<InventarioEntity> inventarioExistente = inventarioRepository.findById(inventario.getIdInventario());
+		if (inventarioExistente.isPresent()) {
+			InventarioEntity inventarioActualizado = inventarioExistente.get();
+			inventarioActualizado.setCantidadDisponible(inventario.getCantidadDisponible());
+			inventarioActualizado.setPrecioPersonalizado(inventario.getPrecioPersonalizado());
+			inventarioActualizado.setFechaVencimiento(inventario.getFechaVencimiento());
+			inventarioActualizado.setEstadoProducto(inventario.getEstadoProducto());
+			inventarioActualizado.setProductoEntity(inventario.getProductoEntity());
+			inventarioActualizado.setUsuarioEntity(inventario.getUsuarioEntity());
+			return inventarioRepository.save(inventarioActualizado);
+		} else {
+			throw new IllegalArgumentException("Inventario no encontrado.");
+		}
+	}
+
+	public List<InventarioEntity> listarInventariosPorUsuario(int idUsuario) {
+		return inventarioRepository.findByUsuarioEntity_IdUsuario(idUsuario);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 @Autowired
+	    public InventarioService(ProductoRepository productoRepository) {
+	        this.productoRepository = productoRepository;
+	    }
+
+	    // Método para obtener un producto por ID
+	    public ProductoEntity obtenerProductoPorId(int idProducto) {
+	        return productoRepository.findById(idProducto).orElse(null);
+	    }
+
+	    // Método para procesar un pedido (solo lógica de inventario)
+	    public void procesarPedido(int idProducto, int cantidad) {
+	        ProductoEntity producto = obtenerProductoPorId(idProducto);
+	        if (producto == null) {
+	            throw new RuntimeException("Producto no encontrado");
+	        }
+
+	        if (producto.getStock() < cantidad) {
+	            throw new RuntimeException("Stock insuficiente");
+	        }
+
+	        producto.setStock(producto.getStock() - cantidad);
+	        productoRepository.save(producto);
+	    }
 }

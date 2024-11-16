@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.dto.DetallePedidoRequest;
 import com.springboot.dto.ProductoDto;
 import com.springboot.entity.CategoriaEntity;
 import com.springboot.entity.InventarioEntity;
 import com.springboot.entity.ProductoEntity;
 import com.springboot.entity.SubcategoriaEntity;
+import com.springboot.exception.InsufficientStockException;
 import com.springboot.service.InventarioService;
 
 import jakarta.validation.Valid;
@@ -154,6 +157,17 @@ public class InventarioController {
 	    
 	    return new ResponseEntity<>(productos, HttpStatus.OK);
 	}
+	/*
+	@GetMapping("/producto/{idProducto}")
+	public ResponseEntity<ProductoEntity> obtenerProductoPorId(@PathVariable int idProducto) {
+	    ProductoEntity producto = inventarioService.obtenerProductoPorId(idProducto);
+	    return producto != null ? ResponseEntity.ok(producto) : ResponseEntity.notFound().build();
+	}
+	
+	*/
+
+	
+	
 
 	// Método alternativo para editar producto usando ProductoEntity
 	@PutMapping("/editarProductoDto")
@@ -175,6 +189,57 @@ public class InventarioController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
+	
+	
+	
+	@PutMapping("/producto/{idProducto}/actualizar-stock")
+	public ResponseEntity<String> actualizarStock(@PathVariable int idProducto, @RequestParam int nuevaCantidad) {
+	    try {
+	        inventarioService.actualizarStock(idProducto, nuevaCantidad);
+	        return new ResponseEntity<>("Stock actualizado correctamente", HttpStatus.OK);
+	    } catch (IllegalArgumentException e) {
+	        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>("Error al actualizar el stock", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	
+	
+	
+	@GetMapping("/producto/{idProducto}")
+    public ResponseEntity<ProductoEntity> obtenerProductoPorId(@PathVariable int idProducto) {
+        ProductoEntity producto = inventarioService.obtenerProductoPorId(idProducto);
+        return producto != null ? ResponseEntity.ok(producto) : ResponseEntity.notFound().build();
+    }
+
+    // 
+	
+	
+	
+	
+	
+	@PostMapping("/realizar-pedido")
+	public ResponseEntity<String> realizarPedido(@RequestBody DetallePedidoRequest request) {
+	    try {
+	        // Verifica el stock antes de proceder
+	        inventarioService.verificarStockDisponible(request.getProductoId(), request.getCantidad());
+
+	        // Si hay suficiente stock, actualiza el inventario
+	        inventarioService.actualizarStock(request.getProductoId(), request.getCantidad());
+
+	        return ResponseEntity.ok("Pedido realizado con éxito");
+	    } catch (InsufficientStockException e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+	    }
+	}
+
+	
+	
+	
+	
+	
 //-------------------------------------------------------------------------------------------------------
 //--------------------------------------------INVENTARIO--------------------------------------------------
 //--------------------------------------------------------------------------------------------------------

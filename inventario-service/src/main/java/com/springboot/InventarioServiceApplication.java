@@ -10,13 +10,14 @@ public class InventarioServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(InventarioServiceApplication.class, args);
+
 	}
 	
-	//---Esto se esta agregando
+	//--- Esto no es necesario en inventario-service
 	@Bean
 	public RestTemplate restTemplate() {
 	    return new RestTemplate();
 	}
-    //---
+	//---
 
 }

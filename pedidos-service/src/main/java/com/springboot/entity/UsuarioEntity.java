@@ -2,6 +2,8 @@ package com.springboot.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,31 +20,54 @@ public class UsuarioEntity
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long idUsuario;    
 	private String usuario;
-	private String contraseña;    
+	private String contrasena;    
 	private String email;    
 	private int ruc;    
 	private int dni;    
 	private String nombreEmpresa;
 	private String direccion;
 	
+	
+	/*
 	@OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, targetEntity = PedidoEntity.class)
 	private List<PedidoEntity> pedidoEntity;
+	*/
+
+
+	@OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Evita la serialización recursiva de los pedidos en Usuario
+    private List<PedidoEntity> pedidos;
+
+    /*
+    @OneToMany(mappedBy = "usuarioEntity", targetEntity = ProductoEntity.class)
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "usuarioEntity"}) // Evita ciclos de serialización
+	private List<ProductoEntity> productos;
+	*/
+	
+	@OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Evita la serialización recursiva de los pedidos en Usuario
+    private List<ProductoEntity> productos; 
+	
 	
 
 	
 
-	public UsuarioEntity(String usuario, String contraseña, String email, int ruc, int dni, String nombreEmpresa,
-			String direccion, List<PedidoEntity> pedidoEntity) {
+	public UsuarioEntity(String usuario, String contrasena, String email, int ruc, int dni, String nombreEmpresa,
+			String direccion, List<PedidoEntity> pedidos, List<ProductoEntity> productos) {
 		//super();
 		this.usuario = usuario;
-		this.contraseña = contraseña;
+		this.contrasena = contrasena;
 		this.email = email;
 		this.ruc = ruc;
 		this.dni = dni;
 		this.nombreEmpresa = nombreEmpresa;
 		this.direccion = direccion;
-		this.pedidoEntity = pedidoEntity;
+		this.pedidos = pedidos;
+		this.productos = productos;
 	}
+	
+	
+	
 
 	public UsuarioEntity() {
 		// TODO Auto-generated constructor stub
@@ -64,12 +89,12 @@ public class UsuarioEntity
 		this.usuario = usuario;
 	}
 
-	public String getContraseña() {
-		return contraseña;
+	public String getContrasena() {
+		return contrasena;
 	}
 
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
 
 	public String getEmail() {
@@ -112,14 +137,22 @@ public class UsuarioEntity
 		this.direccion = direccion;
 	}
 
-	public List<PedidoEntity> getPedidoEntity() {
-		return pedidoEntity;
+	public List<PedidoEntity> getPedidos() {
+		return pedidos;
 	}
 
-	public void setPedidoEntity(List<PedidoEntity> pedidoEntity) {
-		this.pedidoEntity = pedidoEntity;
+	public void setPedidos(List<PedidoEntity> pedidos) {
+		this.pedidos = pedidos;
 	}
-	
-	
+
+	public List<ProductoEntity> getProductos() {
+		return productos;
+	}
+
+	public void setProductos(List<ProductoEntity> productos) {
+		this.productos = productos;
+	}
+
+
 	
 }

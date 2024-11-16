@@ -3,6 +3,7 @@ package com.springboot.entity;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.springboot.exception.InsufficientStockException;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,46 +22,19 @@ public class ProductoEntity
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idProducto;
 	private String nombreProducto;
-	private float precioBase; //precio del producto establecido por el proveedor
+	private float precioBase; 
 	private String descripcion;
 	private boolean impuestoSelectivoConsumo;
 	private boolean igv;
 	private String imagenProducto;
 	private int stock;
 
-	
-	
 
-	/*
-	//1 producto solo pertenece a una subcategoria
-	@OneToOne
-	@JoinColumn(name="idSubcategoria")
-	private SubcategoriaEntity subcategoriaEntity;
-	_*/
-
-
-
-
-
-	
-	
 	
 	//1 producto puede tener múltiples inventarios
 	@OneToMany(mappedBy = "productoEntity", targetEntity = InventarioEntity.class)
 	@JsonIgnore
 	private List<InventarioEntity> inventarioEntity;
-	
-	/*
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_usuario")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "productos"}) // Evita referencias cíclicas y problemas de proxy
-	private UsuarioEntity usuarioEntity;
-	
-	@ManyToOne
-	@JoinColumn(name = "idSubcategoria", nullable = false)
-	private SubcategoriaEntity subcategoria;
-	*/
-	
 	
 	@ManyToOne
 	@JoinColumn(name = "id_subcategoria")
@@ -71,11 +45,6 @@ public class ProductoEntity
 	private UsuarioEntity usuarioEntity;
 
 	
-	
-
-	
-	
-
 	public ProductoEntity(String nombreProducto, float precioBase, String descripcion, boolean impuestoSelectivoConsumo,
 			boolean igv, String imagenProducto, int stock, List<InventarioEntity> inventarioEntity,
 			SubcategoriaEntity subcategoria, UsuarioEntity usuarioEntity) {
@@ -188,4 +157,10 @@ public class ProductoEntity
 
 	
 	
+	public void reducirStock(int cantidad) {
+	    if (this.stock < cantidad) {
+	        throw new InsufficientStockException("No hay suficiente stock para este producto");
+	    }
+	    this.stock -= cantidad;
+	}
 }
