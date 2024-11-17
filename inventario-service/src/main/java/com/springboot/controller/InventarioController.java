@@ -1,5 +1,10 @@
 package com.springboot.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +20,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.dto.DetallePedidoRequest;
 import com.springboot.dto.ProductoDto;
 import com.springboot.entity.CategoriaEntity;
@@ -132,7 +140,7 @@ public class InventarioController {
 		List<ProductoEntity> productos = inventarioService.listarProductos();
 		return new ResponseEntity<>(productos, HttpStatus.OK);
 	}
-
+	/*
 	// Método para crear un producto con id de usuario asociado
 	@PostMapping("/crearProducto")
 	public ResponseEntity<ProductoEntity> crearProducto(@RequestBody ProductoDto productoDto) {
@@ -140,7 +148,49 @@ public class InventarioController {
 				productoDto.getIdUsuario(), productoDto.getIdSubCategoria());
 		return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
 	}
+	*/
+	
+	@PostMapping(value = "/crearProducto", consumes = {"multipart/form-data"})
+    public ResponseEntity<ProductoEntity> crearProducto(
+            @RequestPart("producto") String productoJson,
+            @RequestPart(value = "imagenProducto", required = false) MultipartFile imagenProducto) {
 
+        try {
+            // Parsear el JSON recibido
+            ObjectMapper objectMapper = new ObjectMapper();
+            ProductoDto productoDto = objectMapper.readValue(productoJson, ProductoDto.class);
+
+            // Manejo de la imagen (si existe)
+            String nombreImagen = null;
+            if (imagenProducto != null && !imagenProducto.isEmpty()) {
+                String uploadDir = "uploads/";
+                Files.createDirectories(Paths.get(uploadDir));
+
+                // Guardar la imagen con un nombre único
+                nombreImagen = System.currentTimeMillis() + "_" + imagenProducto.getOriginalFilename();
+                Path rutaImagen = Paths.get(uploadDir, nombreImagen);
+                Files.copy(imagenProducto.getInputStream(), rutaImagen, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // Asignar el nombre de la imagen al DTO
+            productoDto.getProducto().setImagenProducto(nombreImagen);
+
+            // Crear el producto
+            ProductoEntity nuevoProducto = inventarioService.crearProducto(
+                    productoDto.getProducto(),
+                    productoDto.getIdUsuario(),
+                    productoDto.getIdSubCategoria()
+            );
+
+            return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	
+
+	
 	// Endpoint para obtener productos por usuario
 	@GetMapping("/lstProductos/{idUsuario}")
 	public ResponseEntity<List<ProductoEntity>> obtenerProductosPorUsuario(@PathVariable long idUsuario) {
