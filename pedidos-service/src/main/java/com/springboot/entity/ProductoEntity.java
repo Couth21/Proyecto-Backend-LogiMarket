@@ -152,4 +152,10 @@ public class ProductoEntity {
                 .sum();
     }
 	
+	public boolean getIgv() {
+	    return this.igv;
+	}
+
+	
+	
 }

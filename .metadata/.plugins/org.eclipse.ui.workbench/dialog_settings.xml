@@ -14,7 +14,7 @@
 		</section>
 	</section>
 	<section name="PropertyDialog.dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="554"/>
+		<item key="DIALOG_X_ORIGIN" value="148"/>
 		<item key="DIALOG_Y_ORIGIN" value="158"/>
 		<item key="DIALOG_WIDTH" value="828"/>
 		<item key="DIALOG_HEIGHT" value="556"/>
@@ -37,5 +37,7 @@
 		<list key="textArray">
 			<item value="git"/>
 		</list>
+	</section>
+	<section name="WorkbenchPreferenceDialog.dialogBounds">
 	</section>
 </section>

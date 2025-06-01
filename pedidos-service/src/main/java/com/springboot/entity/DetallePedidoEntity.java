@@ -19,7 +19,7 @@ import jakarta.persistence.Transient;
 public class DetallePedidoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idDetallePedido;
+	private Integer idDetallePedido;
 	private int cantidad;
 
 	
@@ -47,9 +47,6 @@ public class DetallePedidoEntity {
 		// Default constructor
 	}
 
-	public int getIdDetallePedido() {
-		return idDetallePedido;
-	}
 
 	public void setIdDetallePedido(int idDetallePedido) {
 		this.idDetallePedido = idDetallePedido;
@@ -80,9 +77,18 @@ public class DetallePedidoEntity {
 	}
 
 
+	public void setCantidad(Integer cantidad) {
+	    this.cantidad = cantidad;
+	}
 
 
-	
+	public Integer getIdDetallePedido() {
+	    return idDetallePedido;
+	}
+
+	public void setIdDetallePedido(Integer idDetallePedido) {
+	    this.idDetallePedido = idDetallePedido;
+	}
     
     
     
